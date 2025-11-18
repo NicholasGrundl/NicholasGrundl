@@ -1,0 +1,76 @@
+<svg width="500" height="350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666" />
+    </marker>
+
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="250" y="25" font-family="monospace" font-size="16" fill="#333" text-anchor="middle" font-weight="bold">
+    Reaction Network: Skills + Interests
+  </text>
+
+  <!-- Nodes (circles with labels) -->
+
+  <!-- Center: Data -->
+  <circle cx="250" cy="175" r="45" fill="#4CAF50" opacity="0.85" filter="url(#glow)"/>
+  <text x="250" y="172" font-family="monospace" font-size="12" fill="white" text-anchor="middle" font-weight="bold">DATA</text>
+  <text x="250" y="185" font-family="monospace" font-size="9" fill="white" text-anchor="middle">pipelines</text>
+
+  <!-- Top Left: Chemistry -->
+  <circle cx="120" cy="80" r="38" fill="#FF9800" opacity="0.85" filter="url(#glow)"/>
+  <text x="120" y="77" font-family="monospace" font-size="11" fill="white" text-anchor="middle" font-weight="bold">ChemE</text>
+  <text x="120" y="88" font-family="monospace" font-size="8" fill="white" text-anchor="middle">thermo</text>
+
+  <!-- Top Right: ML -->
+  <circle cx="380" cy="80" r="38" fill="#2196F3" opacity="0.85" filter="url(#glow)"/>
+  <text x="380" y="77" font-family="monospace" font-size="11" fill="white" text-anchor="middle" font-weight="bold">ML/AI</text>
+  <text x="380" y="88" font-family="monospace" font-size="8" fill="white" text-anchor="middle">CatBoost</text>
+
+  <!-- Bottom Left: Business -->
+  <circle cx="120" cy="270" r="38" fill="#9C27B0" opacity="0.85" filter="url(#glow)"/>
+  <text x="120" y="267" font-family="monospace" font-size="11" fill="white" text-anchor="middle" font-weight="bold">Business</text>
+  <text x="120" y="278" font-family="monospace" font-size="8" fill="white" text-anchor="middle">forecasting</text>
+
+  <!-- Bottom Right: Code -->
+  <circle cx="380" cy="270" r="38" fill="#E91E63" opacity="0.85" filter="url(#glow)"/>
+  <text x="380" y="267" font-family="monospace" font-size="11" fill="white" text-anchor="middle" font-weight="bold">Python</text>
+  <text x="380" y="278" font-family="monospace" font-size="8" fill="white" text-anchor="middle">FastAPI</text>
+
+  <!-- Arrows connecting nodes (bidirectional reactions) -->
+
+  <!-- ChemE <-> Data -->
+  <line x1="155" y1="105" x2="215" y2="150" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="220" y1="155" x2="160" y2="110" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+  <!-- ML <-> Data -->
+  <line x1="345" y1="105" x2="285" y2="150" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="280" y1="155" x2="340" y2="110" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+  <!-- Business <-> Data -->
+  <line x1="155" y1="245" x2="215" y2="200" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="220" y1="195" x2="160" y2="240" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+  <!-- Python <-> Data -->
+  <line x1="345" y1="245" x2="285" y2="200" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="280" y1="195" x2="340" y2="240" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+  <!-- Cross connections -->
+  <line x1="145" y1="95" x2="355" y2="95" stroke="#aaa" stroke-width="1" opacity="0.5" marker-end="url(#arrowhead)"/>
+  <line x1="145" y1="255" x2="355" y2="255" stroke="#aaa" stroke-width="1" opacity="0.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Reaction conditions label -->
+  <text x="250" y="325" font-family="monospace" font-size="11" fill="#666" text-anchor="middle" font-style="italic">
+    k_cat → ∞ under optimal conditions (coffee, music, curiosity)
+  </text>
+</svg>
