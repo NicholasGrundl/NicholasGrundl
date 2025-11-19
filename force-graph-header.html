@@ -14,8 +14,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d1117;
-            color: #c9d1d9;
+            background: #e8e8e8;
+            color: #2a2a2a;
             overflow: hidden;
         }
 
@@ -32,7 +32,7 @@
 
         canvas {
             display: block;
-            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
             cursor: crosshair;
         }
 
@@ -40,60 +40,21 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(22, 27, 34, 0.9);
-            border: 1px solid #30363d;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
             border-radius: 8px;
             padding: 15px;
-            max-width: 300px;
-            backdrop-filter: blur(10px);
+            max-width: 280px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             z-index: 100;
         }
 
         #controls h3 {
             margin: 0 0 10px 0;
             font-size: 14px;
-            color: #58a6ff;
-            border-bottom: 1px solid #30363d;
+            color: #333;
+            border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
-        }
-
-        .control-group {
-            margin: 10px 0;
-        }
-
-        .control-group label {
-            display: block;
-            font-size: 11px;
-            margin-bottom: 4px;
-            color: #8b949e;
-        }
-
-        .control-group input[type="range"] {
-            width: 100%;
-            height: 4px;
-            border-radius: 2px;
-            background: #30363d;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .control-group input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #58a6ff;
-            cursor: pointer;
-        }
-
-        .control-group input[type="range"]::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #58a6ff;
-            cursor: pointer;
-            border: none;
         }
 
         .preset-buttons {
@@ -104,9 +65,9 @@
         }
 
         button {
-            background: #21262d;
-            border: 1px solid #30363d;
-            color: #c9d1d9;
+            background: #fff;
+            border: 1px solid #ccc;
+            color: #333;
             padding: 6px 10px;
             border-radius: 6px;
             cursor: pointer;
@@ -115,67 +76,63 @@
         }
 
         button:hover {
-            background: #30363d;
-            border-color: #58a6ff;
+            background: #f0f0f0;
+            border-color: #999;
         }
 
         button.active {
-            background: #58a6ff;
-            color: #0d1117;
-            border-color: #58a6ff;
+            background: #4a9eff;
+            color: white;
+            border-color: #4a9eff;
         }
 
-        #fullscreen-toggle {
+        #fullscreen-toggle, #toggle-controls {
             position: absolute;
             top: 10px;
-            right: 10px;
-            background: rgba(22, 27, 34, 0.9);
-            border: 1px solid #30363d;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
             padding: 10px 15px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
             z-index: 100;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        #fullscreen-toggle {
+            right: 10px;
+        }
+
+        #toggle-controls {
+            left: 300px;
         }
 
         #info {
             position: absolute;
             bottom: 10px;
             right: 10px;
-            background: rgba(22, 27, 34, 0.8);
-            border: 1px solid #30363d;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
             border-radius: 6px;
             padding: 8px 12px;
             font-size: 10px;
-            color: #8b949e;
-            max-width: 250px;
-            backdrop-filter: blur(10px);
-        }
-
-        .value-display {
-            display: inline-block;
-            float: right;
-            color: #58a6ff;
-            font-size: 10px;
-        }
-
-        #toggle-controls {
-            position: absolute;
-            top: 10px;
-            left: 320px;
-            background: rgba(22, 27, 34, 0.9);
-            border: 1px solid #30363d;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            z-index: 100;
-            backdrop-filter: blur(10px);
+            color: #555;
+            max-width: 280px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         #controls.hidden {
             display: none;
+        }
+
+        .preset-info {
+            font-size: 10px;
+            color: #666;
+            margin: 10px 0;
+            padding: 8px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid #4a9eff;
         }
     </style>
 </head>
@@ -196,53 +153,14 @@
                 <button class="preset" data-preset="chaos">🎆 Chaos</button>
             </div>
 
-            <div class="control-group">
-                <label>Hue Rotation <span class="value-display" id="hue-val">180°</span></label>
-                <input type="range" id="hue" min="0" max="360" value="180">
-            </div>
-
-            <div class="control-group">
-                <label>Saturation <span class="value-display" id="sat-val">70%</span></label>
-                <input type="range" id="saturation" min="0" max="100" value="70">
-            </div>
-
-            <div class="control-group">
-                <label>Brightness <span class="value-display" id="bright-val">60%</span></label>
-                <input type="range" id="brightness" min="20" max="100" value="60">
-            </div>
-
-            <div class="control-group">
-                <label>Gravity <span class="value-display" id="grav-val">0.1</span></label>
-                <input type="range" id="gravity" min="-2" max="2" step="0.1" value="0.1">
-            </div>
-
-            <div class="control-group">
-                <label>Charge Force <span class="value-display" id="charge-val">-30</span></label>
-                <input type="range" id="charge" min="-200" max="50" value="-30">
-            </div>
-
-            <div class="control-group">
-                <label>Link Strength <span class="value-display" id="link-val">0.3</span></label>
-                <input type="range" id="linkStrength" min="0" max="2" step="0.1" value="0.3">
-            </div>
-
-            <div class="control-group">
-                <label>Node Size <span class="value-display" id="size-val">5</span></label>
-                <input type="range" id="nodeSize" min="2" max="20" value="5">
-            </div>
-
-            <div class="control-group">
-                <label>Viscosity <span class="value-display" id="visc-val">0.4</span></label>
-                <input type="range" id="viscosity" min="0" max="1" step="0.1" value="0.4">
+            <div class="preset-info" id="preset-info">
+                Select a preset to begin
             </div>
         </div>
 
         <div id="info">
             <strong>Controls:</strong><br>
-            🖱 Click: Add node | Right-click: Remove<br>
-            🎯 Drag: Move nodes | Wheel: Zoom<br>
-            ⌨️ Space: Pause | Shift: Speed up<br>
-            ↑↓←→: Apply directional force
+            <span id="info-text">Select a preset to see controls</span>
         </div>
     </div>
 
@@ -261,265 +179,498 @@
         let nodes = [];
         let links = [];
         let paused = false;
-        let speedMultiplier = 1;
+        let currentPreset = null;
         let mousePos = { x: width / 2, y: height / 2 };
-        let currentPreset = 'galaxy';
+        let dragNode = null;
+        let frameCount = 0;
 
-        // Parameters (controlled by sliders)
-        let params = {
-            hue: 180,
-            saturation: 70,
-            brightness: 60,
-            gravity: 0.1,
-            charge: -30,
-            linkStrength: 0.3,
-            nodeSize: 5,
-            viscosity: 0.4
+        // Preset-specific parameters
+        let presetParams = {
+            rain: {
+                rainRate: 3,
+                waterLevel: 0,
+                colors: {
+                    rain: ['#5ba3d0', '#6db3e0', '#7fc3f0'],
+                    water: ['#4080b0', '#5090c0', '#60a0d0'],
+                    boat: ['#c07050', '#d08060', '#e09070']
+                }
+            },
+            honey: {
+                viscosity: 0.9,
+                mergeDistance: 30,
+                colors: {
+                    blob: ['#d4a574', '#e0b584', '#ecc594', '#f8d5a4']
+                }
+            },
+            galaxy: {
+                orbitalStrength: 0.02,
+                colors: {
+                    center: ['#8866dd', '#9977ee'],
+                    orbiter: ['#6688cc', '#7799dd', '#88aaee']
+                }
+            },
+            chaos: {
+                splitChance: 0.001,
+                mergeChance: 0.002,
+                colors: {
+                    particle: ['#dd6666', '#66dd66', '#6666dd', '#dddd66', '#dd66dd', '#66dddd']
+                }
+            }
         };
 
-        // Initialize with some nodes
-        function initNodes(count = 50) {
-            nodes = [];
-            links = [];
+        // Group definitions
+        const GROUP_TYPES = {
+            RAIN: 'rain',
+            WATER: 'water',
+            BOAT: 'boat',
+            HONEY_BLOB: 'honey_blob',
+            GALAXY_CENTER: 'galaxy_center',
+            GALAXY_ORBITER: 'galaxy_orbiter',
+            CHAOS_PARTICLE: 'chaos_particle'
+        };
 
-            for (let i = 0; i < count; i++) {
-                nodes.push({
-                    id: i,
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: 0,
-                    vy: 0,
-                    radius: params.nodeSize,
-                    hue: Math.random() * 360,
-                    group: Math.floor(Math.random() * 5)
-                });
-            }
+        // Node factory
+        function createNode(type, x, y, extraProps = {}) {
+            const baseNode = {
+                id: Math.random().toString(36).substr(2, 9),
+                type: type,
+                x: x,
+                y: y,
+                vx: 0,
+                vy: 0,
+                ...extraProps
+            };
 
-            // Create some random links
-            for (let i = 0; i < count * 0.4; i++) {
-                const source = Math.floor(Math.random() * nodes.length);
-                let target = Math.floor(Math.random() * nodes.length);
-                while (target === source) target = Math.floor(Math.random() * nodes.length);
-
-                links.push({
-                    source: nodes[source],
-                    target: nodes[target]
-                });
+            switch(type) {
+                case GROUP_TYPES.RAIN:
+                    return { ...baseNode, radius: 2, mass: 0.5, color: randomFromArray(presetParams.rain.colors.rain) };
+                case GROUP_TYPES.WATER:
+                    return { ...baseNode, radius: 4, mass: 1, color: randomFromArray(presetParams.rain.colors.water) };
+                case GROUP_TYPES.BOAT:
+                    return { ...baseNode, radius: 5, mass: 2, color: randomFromArray(presetParams.rain.colors.boat) };
+                case GROUP_TYPES.HONEY_BLOB:
+                    return { ...baseNode, radius: 6, mass: 1.5, color: randomFromArray(presetParams.honey.colors.blob), viscous: true };
+                case GROUP_TYPES.GALAXY_CENTER:
+                    return { ...baseNode, radius: 15, mass: 100, color: randomFromArray(presetParams.galaxy.colors.center), fixed: true };
+                case GROUP_TYPES.GALAXY_ORBITER:
+                    return { ...baseNode, radius: 3, mass: 0.5, color: randomFromArray(presetParams.galaxy.colors.orbiter) };
+                case GROUP_TYPES.CHAOS_PARTICLE:
+                    return { ...baseNode, radius: 5, mass: 1, color: randomFromArray(presetParams.chaos.colors.particle), energy: Math.random() };
+                default:
+                    return baseNode;
             }
         }
 
-        // D3 Force Simulation
-        const simulation = d3.forceSimulation(nodes)
-            .force('charge', d3.forceManyBody().strength(params.charge))
-            .force('link', d3.forceLink(links).distance(50).strength(params.linkStrength))
-            .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('collision', d3.forceCollide().radius(d => d.radius + 2))
-            .alphaDecay(0.01)
-            .velocityDecay(params.viscosity);
+        function randomFromArray(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
 
-        // Preset configurations
+        // Preset initializers
         const presets = {
-            rain: () => {
-                params.gravity = 0.5;
-                params.charge = -10;
-                params.linkStrength = 0.8;
-                params.viscosity = 0.2;
-                updateSliders();
+            rain: {
+                init: () => {
+                    nodes = [];
+                    links = [];
 
-                // Make some nodes "floaters" (connected)
-                nodes.forEach((node, i) => {
-                    node.isRain = i % 3 !== 0;
-                    node.radius = node.isRain ? 2 : 6;
-                });
+                    // Create boat (connected nodes that float)
+                    const boatX = width / 2;
+                    const boatY = height * 0.4;
+                    const boat = [
+                        createNode(GROUP_TYPES.BOAT, boatX - 20, boatY),
+                        createNode(GROUP_TYPES.BOAT, boatX + 20, boatY),
+                        createNode(GROUP_TYPES.BOAT, boatX, boatY - 15),
+                        createNode(GROUP_TYPES.BOAT, boatX, boatY + 15)
+                    ];
+                    nodes.push(...boat);
+
+                    // Connect boat nodes
+                    links.push(
+                        { source: boat[0], target: boat[1], strength: 1, distance: 40 },
+                        { source: boat[0], target: boat[2], strength: 1, distance: 30 },
+                        { source: boat[1], target: boat[2], strength: 1, distance: 30 },
+                        { source: boat[0], target: boat[3], strength: 1, distance: 30 },
+                        { source: boat[1], target: boat[3], strength: 1, distance: 30 }
+                    );
+
+                    // Initial water nodes
+                    for (let i = 0; i < 20; i++) {
+                        const waterNode = createNode(GROUP_TYPES.WATER,
+                            Math.random() * width,
+                            height - 30 + Math.random() * 20
+                        );
+                        nodes.push(waterNode);
+                    }
+
+                    presetParams.rain.waterLevel = height - 40;
+                },
+                update: () => {
+                    frameCount++;
+
+                    // Spawn rain drops
+                    if (frameCount % Math.floor(10 / presetParams.rain.rainRate) === 0) {
+                        const raindrop = createNode(GROUP_TYPES.RAIN,
+                            Math.random() * width,
+                            -10
+                        );
+                        raindrop.vy = 2 + Math.random();
+                        nodes.push(raindrop);
+                    }
+
+                    // Update nodes
+                    nodes.forEach((node, i) => {
+                        if (node.type === GROUP_TYPES.RAIN) {
+                            // Rain falls
+                            node.vy += 0.3;
+                            node.y += node.vy;
+
+                            // Convert to water when hitting water level
+                            if (node.y > presetParams.rain.waterLevel) {
+                                node.type = GROUP_TYPES.WATER;
+                                node.radius = 4;
+                                node.mass = 1;
+                                node.color = randomFromArray(presetParams.rain.colors.water);
+                                node.vy = 0;
+
+                                // Link to nearby water nodes (surface tension)
+                                const nearbyWater = nodes.filter(n =>
+                                    n.type === GROUP_TYPES.WATER &&
+                                    n !== node &&
+                                    dist(n, node) < 40
+                                ).slice(0, 3);
+
+                                nearbyWater.forEach(target => {
+                                    links.push({ source: node, target, strength: 0.5, distance: 20 });
+                                });
+
+                                // Update water level
+                                presetParams.rain.waterLevel = Math.max(
+                                    height * 0.3,
+                                    Math.min(...nodes.filter(n => n.type === GROUP_TYPES.WATER).map(n => n.y)) - 10
+                                );
+                            }
+
+                            // Remove if out of bounds
+                            if (node.y > height + 50) {
+                                nodes.splice(i, 1);
+                            }
+                        } else if (node.type === GROUP_TYPES.WATER) {
+                            // Water settles down
+                            node.vy += 0.1;
+
+                            // Keep water at bottom
+                            if (node.y > height - 10) {
+                                node.y = height - 10;
+                                node.vy *= -0.3;
+                            }
+                        } else if (node.type === GROUP_TYPES.BOAT) {
+                            // Boat repelled by water (buoyancy)
+                            nodes.filter(n => n.type === GROUP_TYPES.WATER).forEach(water => {
+                                const d = dist(node, water);
+                                if (d < 60) {
+                                    const force = (60 - d) * 0.05;
+                                    const angle = Math.atan2(node.y - water.y, node.x - water.x);
+                                    node.vx += Math.cos(angle) * force;
+                                    node.vy += Math.sin(angle) * force;
+                                }
+                            });
+
+                            // Gravity on boat
+                            node.vy += 0.05;
+
+                            // Keep boat on screen
+                            if (node.y > height - 20) {
+                                node.vy *= -0.3;
+                            }
+                        }
+                    });
+                },
+                info: 'Rain falls and accumulates as water. Boat floats on surface.<br>🖱 Wheel: Control rain rate'
             },
-            honey: () => {
-                params.gravity = 0.15;
-                params.charge = -5;
-                params.linkStrength = 0.1;
-                params.viscosity = 0.8;
-                params.hue = 40;
-                params.saturation = 80;
-                updateSliders();
 
-                nodes.forEach(node => {
-                    node.viscous = true;
-                    node.radius = params.nodeSize;
-                });
+            honey: {
+                init: () => {
+                    nodes = [];
+                    links = [];
+
+                    // Start with some honey blobs
+                    for (let i = 0; i < 15; i++) {
+                        nodes.push(createNode(GROUP_TYPES.HONEY_BLOB,
+                            Math.random() * width,
+                            Math.random() * height * 0.5
+                        ));
+                    }
+                },
+                update: () => {
+                    nodes.forEach((node, i) => {
+                        // Attract to mouse when close
+                        const dMouse = Math.sqrt(
+                            Math.pow(mousePos.x - node.x, 2) +
+                            Math.pow(mousePos.y - node.y, 2)
+                        );
+
+                        if (dMouse < 120) {
+                            const force = (120 - dMouse) * 0.0003;
+                            const angle = Math.atan2(mousePos.y - node.y, mousePos.x - node.x);
+                            node.vx += Math.cos(angle) * force;
+                            node.vy += Math.sin(angle) * force;
+                        }
+
+                        // Viscous drag
+                        node.vx *= (1 - presetParams.honey.viscosity);
+                        node.vy *= (1 - presetParams.honey.viscosity);
+
+                        // Gravity (dripping)
+                        node.vy += 0.15;
+
+                        // Update position
+                        node.x += node.vx;
+                        node.y += node.vy;
+
+                        // Wrap around
+                        if (node.y > height + 20) {
+                            node.y = -20;
+                            node.x = Math.random() * width;
+                        }
+                        if (node.x < -20) node.x = width + 20;
+                        if (node.x > width + 20) node.x = -20;
+
+                        // Merge with nearby blobs
+                        nodes.forEach((other, j) => {
+                            if (i !== j && dist(node, other) < presetParams.honey.mergeDistance) {
+                                // Create temporary link for visual coalescing
+                                if (!links.find(l =>
+                                    (l.source === node && l.target === other) ||
+                                    (l.source === other && l.target === node)
+                                )) {
+                                    links.push({ source: node, target: other, strength: 0.1, distance: 15 });
+
+                                    // Remove link after a while
+                                    setTimeout(() => {
+                                        links = links.filter(l =>
+                                            !((l.source === node && l.target === other) ||
+                                              (l.source === other && l.target === node))
+                                        );
+                                    }, 1000);
+                                }
+
+                                // Pull together
+                                const pullForce = 0.01;
+                                const angle = Math.atan2(other.y - node.y, other.x - node.x);
+                                node.vx += Math.cos(angle) * pullForce;
+                                node.vy += Math.sin(angle) * pullForce;
+                            }
+                        });
+                    });
+                },
+                info: 'Viscous honey blobs coalesce and drip.<br>🖱 Mouse: Attract nearby blobs'
             },
-            galaxy: () => {
-                params.gravity = 0.0;
-                params.charge = -30;
-                params.linkStrength = 0.3;
-                params.viscosity = 0.4;
-                params.hue = 260;
-                params.saturation = 70;
-                updateSliders();
 
-                nodes.forEach(node => {
-                    node.radius = params.nodeSize;
-                });
+            galaxy: {
+                init: () => {
+                    nodes = [];
+                    links = [];
+
+                    // Central massive nodes
+                    const center1 = createNode(GROUP_TYPES.GALAXY_CENTER, width / 2, height / 2);
+                    nodes.push(center1);
+
+                    // Orbiting particles
+                    for (let i = 0; i < 40; i++) {
+                        const angle = (i / 40) * Math.PI * 2;
+                        const radius = 50 + Math.random() * 80;
+                        const orbiter = createNode(GROUP_TYPES.GALAXY_ORBITER,
+                            center1.x + Math.cos(angle) * radius,
+                            center1.y + Math.sin(angle) * radius
+                        );
+
+                        // Initial orbital velocity
+                        const speed = 0.5 + Math.random() * 0.5;
+                        orbiter.vx = -Math.sin(angle) * speed;
+                        orbiter.vy = Math.cos(angle) * speed;
+
+                        nodes.push(orbiter);
+                    }
+                },
+                update: () => {
+                    const centers = nodes.filter(n => n.type === GROUP_TYPES.GALAXY_CENTER);
+
+                    nodes.forEach(node => {
+                        if (node.type === GROUP_TYPES.GALAXY_ORBITER) {
+                            // Orbital mechanics - attracted to center
+                            centers.forEach(center => {
+                                const dx = center.x - node.x;
+                                const dy = center.y - node.y;
+                                const d = Math.sqrt(dx * dx + dy * dy);
+
+                                if (d > 0) {
+                                    const force = (center.mass * presetParams.galaxy.orbitalStrength) / (d * d);
+                                    node.vx += (dx / d) * force;
+                                    node.vy += (dy / d) * force;
+                                }
+                            });
+
+                            // Update position
+                            node.x += node.vx;
+                            node.y += node.vy;
+
+                            // Slight drag
+                            node.vx *= 0.99;
+                            node.vy *= 0.99;
+
+                            // Wrap around
+                            if (node.x < 0) node.x = width;
+                            if (node.x > width) node.x = 0;
+                            if (node.y < 0) node.y = height;
+                            if (node.y > height) node.y = 0;
+                        }
+                    });
+                },
+                info: 'Particles orbit central mass.<br>🖱 Drag: Move the center'
             },
-            chaos: () => {
-                params.gravity = 0.0;
-                params.charge = Math.random() * 100 - 50;
-                params.linkStrength = Math.random();
-                params.viscosity = 0.1;
-                updateSliders();
 
-                // Randomize velocities
-                nodes.forEach(node => {
-                    node.vx = (Math.random() - 0.5) * 10;
-                    node.vy = (Math.random() - 0.5) * 10;
-                    node.radius = params.nodeSize;
-                });
+            chaos: {
+                init: () => {
+                    nodes = [];
+                    links = [];
+
+                    for (let i = 0; i < 25; i++) {
+                        const particle = createNode(GROUP_TYPES.CHAOS_PARTICLE,
+                            Math.random() * width,
+                            Math.random() * height
+                        );
+                        particle.vx = (Math.random() - 0.5) * 4;
+                        particle.vy = (Math.random() - 0.5) * 4;
+                        nodes.push(particle);
+                    }
+                },
+                update: () => {
+                    nodes.forEach((node, i) => {
+                        // Random force bursts
+                        if (Math.random() < 0.02) {
+                            node.vx += (Math.random() - 0.5) * 2;
+                            node.vy += (Math.random() - 0.5) * 2;
+                        }
+
+                        // Update position
+                        node.x += node.vx;
+                        node.y += node.vy;
+
+                        // Bounce off walls
+                        if (node.x < node.radius || node.x > width - node.radius) {
+                            node.vx *= -0.9;
+                            node.x = Math.max(node.radius, Math.min(width - node.radius, node.x));
+                        }
+                        if (node.y < node.radius || node.y > height - node.radius) {
+                            node.vy *= -0.9;
+                            node.y = Math.max(node.radius, Math.min(height - node.radius, node.y));
+                        }
+
+                        // Slight drag
+                        node.vx *= 0.98;
+                        node.vy *= 0.98;
+
+                        // Random splitting
+                        if (Math.random() < presetParams.chaos.splitChance && nodes.length < 50) {
+                            const newParticle = createNode(GROUP_TYPES.CHAOS_PARTICLE,
+                                node.x + (Math.random() - 0.5) * 10,
+                                node.y + (Math.random() - 0.5) * 10
+                            );
+                            newParticle.vx = node.vx + (Math.random() - 0.5) * 2;
+                            newParticle.vy = node.vy + (Math.random() - 0.5) * 2;
+                            newParticle.radius = node.radius * 0.8;
+                            node.radius *= 0.8;
+                            nodes.push(newParticle);
+                        }
+
+                        // Random merging
+                        nodes.forEach((other, j) => {
+                            if (i < j && dist(node, other) < 15 && Math.random() < presetParams.chaos.mergeChance) {
+                                // Merge into first node
+                                node.radius = Math.sqrt(node.radius * node.radius + other.radius * other.radius);
+                                node.vx = (node.vx + other.vx) / 2;
+                                node.vy = (node.vy + other.vy) / 2;
+                                nodes.splice(j, 1);
+                            }
+                        });
+                    });
+                },
+                info: 'Chaotic particles split and merge randomly.<br>🖱 Click: Add energy burst'
             }
         };
 
-        // Update sliders to match params
-        function updateSliders() {
-            document.getElementById('hue').value = params.hue;
-            document.getElementById('saturation').value = params.saturation;
-            document.getElementById('brightness').value = params.brightness;
-            document.getElementById('gravity').value = params.gravity;
-            document.getElementById('charge').value = params.charge;
-            document.getElementById('linkStrength').value = params.linkStrength;
-            document.getElementById('nodeSize').value = params.nodeSize;
-            document.getElementById('viscosity').value = params.viscosity;
-
-            updateValueDisplays();
-        }
-
-        // Update value displays
-        function updateValueDisplays() {
-            document.getElementById('hue-val').textContent = params.hue + '°';
-            document.getElementById('sat-val').textContent = params.saturation + '%';
-            document.getElementById('bright-val').textContent = params.brightness + '%';
-            document.getElementById('grav-val').textContent = params.gravity;
-            document.getElementById('charge-val').textContent = params.charge;
-            document.getElementById('link-val').textContent = params.linkStrength;
-            document.getElementById('size-val').textContent = params.nodeSize;
-            document.getElementById('visc-val').textContent = params.viscosity;
-        }
-
-        // Apply physics based on current preset and params
-        function applyPhysics() {
-            simulation
-                .force('charge', d3.forceManyBody().strength(params.charge))
-                .force('link', d3.forceLink(links).distance(50).strength(params.linkStrength))
-                .velocityDecay(params.viscosity);
-
-            // Gravity effect
-            nodes.forEach(node => {
-                if (currentPreset === 'rain' && node.isRain) {
-                    node.vy += params.gravity * 2;
-                    // Reset to top when out of bounds
-                    if (node.y > height + 20) {
-                        node.y = -20;
-                        node.x = Math.random() * width;
-                    }
-                } else if (currentPreset === 'honey') {
-                    // Attract to mouse
-                    const dx = mousePos.x - node.x;
-                    const dy = mousePos.y - node.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        node.vx += dx * 0.001;
-                        node.vy += dy * 0.001;
-                    }
-                    // Drip effect
-                    node.vy += params.gravity;
-                } else {
-                    node.vy += params.gravity;
-                }
-
-                // Update radius based on slider
-                if (!node.isRain) {
-                    node.radius = params.nodeSize;
-                }
-            });
-
-            simulation.alpha(0.3).restart();
+        function dist(a, b) {
+            return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
         }
 
         // Render function
         function render() {
-            ctx.fillStyle = 'rgba(13, 17, 23, 0.3)';
+            // Clear with fade effect
+            ctx.fillStyle = 'rgba(245, 245, 245, 0.3)';
             ctx.fillRect(0, 0, width, height);
 
             // Draw links
-            ctx.strokeStyle = `hsla(${params.hue}, ${params.saturation}%, ${params.brightness - 20}%, 0.3)`;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 2;
             links.forEach(link => {
+                const source = link.source;
+                const target = link.target;
+
+                ctx.strokeStyle = source.color + '40';
                 ctx.beginPath();
-                ctx.moveTo(link.source.x, link.source.y);
-                ctx.lineTo(link.target.x, link.target.y);
+                ctx.moveTo(source.x, source.y);
+                ctx.lineTo(target.x, target.y);
                 ctx.stroke();
             });
 
             // Draw nodes
-            nodes.forEach((node, i) => {
-                const hue = (params.hue + node.group * 30 + i * 2) % 360;
+            nodes.forEach(node => {
                 const gradient = ctx.createRadialGradient(
                     node.x, node.y, 0,
                     node.x, node.y, node.radius
                 );
-                gradient.addColorStop(0, `hsla(${hue}, ${params.saturation}%, ${params.brightness}%, 0.9)`);
-                gradient.addColorStop(1, `hsla(${hue}, ${params.saturation}%, ${params.brightness - 30}%, 0.4)`);
+                gradient.addColorStop(0, node.color + 'dd');
+                gradient.addColorStop(1, node.color + '66');
 
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Glow effect for some nodes
-                if (i % 5 === 0) {
-                    ctx.strokeStyle = `hsla(${hue}, 100%, 70%, 0.5)`;
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                }
+                // Outline
+                ctx.strokeStyle = node.color + '99';
+                ctx.lineWidth = 1;
+                ctx.stroke();
             });
         }
 
         // Animation loop
         function tick() {
-            if (!paused) {
-                applyPhysics();
-                simulation.tick(speedMultiplier);
+            if (!paused && currentPreset) {
+                presets[currentPreset].update();
             }
             render();
             requestAnimationFrame(tick);
         }
 
         // Mouse interactions
-        let dragNode = null;
-
         canvas.addEventListener('mousedown', (e) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
             // Find node at position
-            dragNode = nodes.find(node => {
-                const dx = node.x - x;
-                const dy = node.y - y;
-                return Math.sqrt(dx * dx + dy * dy) < node.radius + 5;
-            });
+            dragNode = nodes.find(node => dist(node, {x, y}) < node.radius + 5);
 
-            if (!dragNode && e.button === 0) {
-                // Add new node
-                const newNode = {
-                    id: nodes.length,
-                    x: x,
-                    y: y,
-                    vx: 0,
-                    vy: 0,
-                    radius: params.nodeSize,
-                    hue: Math.random() * 360,
-                    group: Math.floor(Math.random() * 5)
-                };
-                nodes.push(newNode);
-                simulation.nodes(nodes);
-                simulation.alpha(1).restart();
+            // Chaos mode - add energy burst on click
+            if (!dragNode && currentPreset === 'chaos' && e.button === 0) {
+                nodes.forEach(node => {
+                    const d = dist(node, {x, y});
+                    if (d < 80) {
+                        const force = (80 - d) * 0.1;
+                        const angle = Math.atan2(node.y - y, node.x - x);
+                        node.vx += Math.cos(angle) * force;
+                        node.vy += Math.sin(angle) * force;
+                    }
+                });
             }
         });
 
@@ -528,7 +679,7 @@
             mousePos.x = e.clientX - rect.left;
             mousePos.y = e.clientY - rect.top;
 
-            if (dragNode) {
+            if (dragNode && !dragNode.fixed) {
                 dragNode.x = mousePos.x;
                 dragNode.y = mousePos.y;
                 dragNode.vx = 0;
@@ -540,96 +691,42 @@
             dragNode = null;
         });
 
-        canvas.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            // Remove node at position
-            const index = nodes.findIndex(node => {
-                const dx = node.x - x;
-                const dy = node.y - y;
-                return Math.sqrt(dx * dx + dy * dy) < node.radius + 5;
-            });
-
-            if (index !== -1) {
-                // Remove associated links
-                links = links.filter(link =>
-                    link.source !== nodes[index] && link.target !== nodes[index]
-                );
-                nodes.splice(index, 1);
-                simulation.nodes(nodes);
-                simulation.force('link', d3.forceLink(links).distance(50).strength(params.linkStrength));
-                simulation.alpha(1).restart();
-            }
-        });
-
         canvas.addEventListener('wheel', (e) => {
             e.preventDefault();
-            const delta = e.deltaY > 0 ? 0.9 : 1.1;
-            params.nodeSize = Math.max(2, Math.min(20, params.nodeSize * delta));
-            document.getElementById('nodeSize').value = params.nodeSize;
-            updateValueDisplays();
+
+            if (currentPreset === 'rain') {
+                // Control rain rate
+                const delta = e.deltaY > 0 ? -0.5 : 0.5;
+                presetParams.rain.rainRate = Math.max(0.5, Math.min(10, presetParams.rain.rainRate + delta));
+            } else if (currentPreset === 'honey') {
+                // Control viscosity
+                const delta = e.deltaY > 0 ? -0.05 : 0.05;
+                presetParams.honey.viscosity = Math.max(0.5, Math.min(0.98, presetParams.honey.viscosity + delta));
+            } else if (currentPreset === 'galaxy') {
+                // Control orbital strength
+                const delta = e.deltaY > 0 ? -0.002 : 0.002;
+                presetParams.galaxy.orbitalStrength = Math.max(0.005, Math.min(0.05, presetParams.galaxy.orbitalStrength + delta));
+            }
         });
 
         // Keyboard interactions
         document.addEventListener('keydown', (e) => {
-            switch(e.key) {
-                case ' ':
-                    e.preventDefault();
-                    paused = !paused;
-                    break;
-                case 'Shift':
-                    speedMultiplier = 3;
-                    break;
-                case 'Enter':
-                    simulation.alpha(1).restart();
-                    break;
-                case 'ArrowUp':
-                    nodes.forEach(node => node.vy -= 2);
-                    break;
-                case 'ArrowDown':
-                    nodes.forEach(node => node.vy += 2);
-                    break;
-                case 'ArrowLeft':
-                    nodes.forEach(node => node.vx -= 2);
-                    break;
-                case 'ArrowRight':
-                    nodes.forEach(node => node.vx += 2);
-                    break;
+            if (e.key === ' ') {
+                e.preventDefault();
+                paused = !paused;
             }
         });
 
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'Shift') {
-                speedMultiplier = 1;
-            }
-        });
-
-        // Control event listeners
+        // Preset selection
         document.querySelectorAll('.preset').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentPreset = btn.dataset.preset;
-                presets[currentPreset]();
-                initNodes(currentPreset === 'rain' ? 80 : 50);
-                simulation.nodes(nodes);
-                simulation.force('link', d3.forceLink(links).distance(50).strength(params.linkStrength));
-                simulation.alpha(1).restart();
-            });
-        });
-
-        // Slider controls
-        ['hue', 'saturation', 'brightness', 'gravity', 'charge', 'linkStrength', 'nodeSize', 'viscosity'].forEach(param => {
-            const slider = document.getElementById(param);
-            slider.addEventListener('input', (e) => {
-                params[param] = parseFloat(e.target.value);
-                updateValueDisplays();
-                if (['charge', 'linkStrength', 'viscosity'].includes(param)) {
-                    applyPhysics();
-                }
+                frameCount = 0;
+                presets[currentPreset].init();
+                document.getElementById('preset-info').innerHTML = presets[currentPreset].info;
+                document.getElementById('info-text').innerHTML = presets[currentPreset].info;
             });
         });
 
@@ -641,12 +738,13 @@
                 height = container.classList.contains('fullscreen') ? window.innerHeight : 300;
                 canvas.width = width;
                 canvas.height = height;
-                simulation.force('center', d3.forceCenter(width / 2, height / 2));
-                simulation.alpha(1).restart();
+                if (currentPreset) {
+                    presets[currentPreset].init();
+                }
             }, 50);
         });
 
-        // Toggle controls visibility
+        // Toggle controls
         document.getElementById('toggle-controls').addEventListener('click', (e) => {
             const controls = document.getElementById('controls');
             controls.classList.toggle('hidden');
@@ -658,15 +756,18 @@
             if (!container.classList.contains('fullscreen')) {
                 width = window.innerWidth;
                 canvas.width = width;
-                simulation.force('center', d3.forceCenter(width / 2, height / 2));
+                if (currentPreset) {
+                    presets[currentPreset].init();
+                }
             }
         });
 
-        // Initialize
-        initNodes();
-        presets.galaxy();
-        document.querySelector('[data-preset="galaxy"]').classList.add('active');
-        updateValueDisplays();
+        // Initialize with rain
+        currentPreset = 'rain';
+        presets.rain.init();
+        document.querySelector('[data-preset="rain"]').classList.add('active');
+        document.getElementById('preset-info').innerHTML = presets.rain.info;
+        document.getElementById('info-text').innerHTML = presets.rain.info;
         tick();
     </script>
 </body>
