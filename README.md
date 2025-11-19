@@ -76,17 +76,35 @@ from engineering import (
 
 ---
 
-### ☕ Currently Brewing...
+### ⚡ Interactive Force Graph Playground
 
-<!-- Choose one of these SVGs or rotate them! -->
+**[Click here to explore the interactive visualization →](https://nicholasgrundl.github.io/NicholasGrundl/force-graph-header.html)**
+
 <p align="center">
-  <img src="./concept1_coffee_formulas.svg" alt="Currently Brewing" width="400"/>
+  <em>A physics-based particle simulation with emergent behavior</em><br>
+  <sub>🌧 Rain seeking gaps • 🍯 Honey coalescing • 🎆 Chaos splitting</sub>
 </p>
 
-<!-- Alternative options:
-<img src="./concept2_reaction_network.svg" alt="Skill Network" width="500"/>
-<img src="./concept3_data_pipes.svg" alt="Data Pipeline" width="600"/>
--->
+> **Three distinct simulations:**
+> - **Rain**: Raindrops intelligently seek gaps in the water surface, which shimmers with spring forces
+> - **Honey**: Viscous particles flow and coalesce into globs when they collide (arrow keys control flow direction)
+> - **Chaos**: Particles randomly split and merge, creating dynamic energy patterns
+
+<details>
+<summary>📸 Can't view the interactive version? Click for details</summary>
+
+To view the interactive force graph:
+1. **GitHub Pages** (recommended): [Open the live demo](https://nicholasgrundl.github.io/NicholasGrundl/force-graph-header.html)
+2. **Local viewing**: Download `force-graph-header.html` and open in your browser
+3. **Quick preview**: Use [htmlpreview.github.io](http://htmlpreview.github.io/?https://github.com/NicholasGrundl/NicholasGrundl/blob/main/force-graph-header.html)
+
+**Interaction Guide:**
+- 🌧 **Rain**: Scroll to control rain rate, watch droplets find gaps
+- 🍯 **Honey**: Arrow keys change flow direction, left-click to drag, right-click-drag to create
+- 🎆 **Chaos**: Click to add energy burst, watch particles evolve
+- ⌨️ **All modes**: Space to pause, fullscreen toggle available
+
+</details>
 
 ---
 
