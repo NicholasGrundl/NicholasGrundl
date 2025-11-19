@@ -1,0 +1,61 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Coffee Cup -->
+  <defs>
+    <linearGradient id="coffeeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3e2723;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5d4037;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Cup body -->
+  <path d="M 100 180 L 120 250 L 280 250 L 300 180 Z" fill="url(#coffeeGradient)" stroke="#2c1810" stroke-width="3"/>
+
+  <!-- Handle -->
+  <path d="M 300 200 Q 340 200 340 230 Q 340 250 310 250" fill="none" stroke="#2c1810" stroke-width="3"/>
+
+  <!-- Coffee surface -->
+  <ellipse cx="200" cy="180" rx="100" ry="15" fill="#1a0f0a" opacity="0.8"/>
+
+  <!-- Steam with formulas -->
+  <g opacity="0.7">
+    <!-- Left steam - Gibbs Free Energy -->
+    <text x="140" y="140" font-family="monospace" font-size="14" fill="#666" opacity="0.9">
+      ΔG = ΔH - TΔS
+      <animate attributeName="y" values="140;120;140" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0.3;0.9" dur="4s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- Middle steam - Rate equation -->
+    <text x="160" y="100" font-family="monospace" font-size="12" fill="#888" opacity="0.8">
+      r = k[A]ⁿ[B]ᵐ
+      <animate attributeName="y" values="100;75;100" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="3.5s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- Right steam - Fermentation -->
+    <text x="180" y="60" font-family="monospace" font-size="11" fill="#999" opacity="0.7">
+      C₆H₁₂O₆ → 2C₂H₅OH
+      <animate attributeName="y" values="60;35;60" dur="4.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0.1;0.7" dur="4.5s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- Far left steam - ML equation -->
+    <text x="120" y="165" font-family="monospace" font-size="10" fill="#777" opacity="0.6">
+      ŷ = σ(wx + b)
+      <animate attributeName="y" values="165;145;165" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- Far right steam - Arrhenius -->
+    <text x="220" y="130" font-family="monospace" font-size="13" fill="#666" opacity="0.75">
+      k = Ae^(-Ea/RT)
+      <animate attributeName="y" values="130;110;130" dur="4.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.75;0.25;0.75" dur="4.2s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Label -->
+  <text x="200" y="280" font-family="monospace" font-size="14" fill="#333" text-anchor="middle" font-weight="bold">
+    ☕ Currently Brewing...
+  </text>
+</svg>
