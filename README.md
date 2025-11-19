@@ -76,17 +76,33 @@ from engineering import (
 
 ---
 
-### ☕ Currently Brewing...
+### ⚡ Interactive Force Graph Playground
 
-<!-- Choose one of these SVGs or rotate them! -->
+**[Click here to explore the interactive visualization →](https://nicholasgrundl.github.io/NicholasGrundl/force-graph-header.html)**
+
 <p align="center">
-  <img src="./concept1_coffee_formulas.svg" alt="Currently Brewing" width="400"/>
+  <em>A D3.js force-directed graph with real-time physics simulation</em><br>
+  <sub>🌧 Rain mode • 🍯 Honey viscosity • 🌌 Galaxy orbits • 🎆 Chaos mode</sub>
 </p>
 
-<!-- Alternative options:
-<img src="./concept2_reaction_network.svg" alt="Skill Network" width="500"/>
-<img src="./concept3_data_pipes.svg" alt="Data Pipeline" width="600"/>
--->
+> **Features:** Mouse interactions, keyboard controls, color modulation, physics controls, and fullscreen mode.
+> Drag nodes, click to add, right-click to remove, scroll to zoom. Press `Space` to pause, `Shift` to speed up.
+
+<details>
+<summary>📸 Can't view the interactive version? Click for details</summary>
+
+To view the interactive force graph:
+1. **GitHub Pages** (recommended): [Open the live demo](https://nicholasgrundl.github.io/NicholasGrundl/force-graph-header.html)
+2. **Local viewing**: Download `force-graph-header.html` and open in your browser
+3. **Quick preview**: Use [htmlpreview.github.io](http://htmlpreview.github.io/?https://github.com/NicholasGrundl/NicholasGrundl/blob/main/force-graph-header.html)
+
+**Interaction Guide:**
+- 🖱️ **Mouse**: Click to add nodes, right-click to remove, drag to move, scroll to zoom
+- ⌨️ **Keyboard**: Space (pause), Shift (speed up), Enter (restart), Arrow keys (apply force)
+- 🎨 **Controls**: Adjust colors, physics, and preset modes in real-time
+- ⛶ **Fullscreen**: Toggle to immersive full-viewport mode
+
+</details>
 
 ---
 

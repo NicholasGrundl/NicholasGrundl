@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Force Graph</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow: hidden;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 300px;
+            transition: height 0.3s ease;
+        }
+
+        #container.fullscreen {
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            cursor: crosshair;
+        }
+
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 300px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        #controls h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #58a6ff;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 5px;
+        }
+
+        .control-group {
+            margin: 10px 0;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 4px;
+            color: #8b949e;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #30363d;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #58a6ff;
+            cursor: pointer;
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #58a6ff;
+            cursor: pointer;
+            border: none;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #30363d;
+            border-color: #58a6ff;
+        }
+
+        button.active {
+            background: #58a6ff;
+            color: #0d1117;
+            border-color: #58a6ff;
+        }
+
+        #fullscreen-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid #30363d;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        #info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 10px;
+            color: #8b949e;
+            max-width: 250px;
+            backdrop-filter: blur(10px);
+        }
+
+        .value-display {
+            display: inline-block;
+            float: right;
+            color: #58a6ff;
+            font-size: 10px;
+        }
+
+        #toggle-controls {
+            position: absolute;
+            top: 10px;
+            left: 320px;
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid #30363d;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        #controls.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+
+        <button id="toggle-controls">Hide Controls</button>
+        <button id="fullscreen-toggle">⛶ Fullscreen</button>
+
+        <div id="controls">
+            <h3>⚡ Force Graph Playground</h3>
+
+            <div class="preset-buttons">
+                <button class="preset" data-preset="rain">🌧 Rain</button>
+                <button class="preset" data-preset="honey">🍯 Honey</button>
+                <button class="preset" data-preset="galaxy">🌌 Galaxy</button>
+                <button class="preset" data-preset="chaos">🎆 Chaos</button>
+            </div>
+
+            <div class="control-group">
+                <label>Hue Rotation <span class="value-display" id="hue-val">180°</span></label>
+                <input type="range" id="hue" min="0" max="360" value="180">
+            </div>
+
+            <div class="control-group">
+                <label>Saturation <span class="value-display" id="sat-val">70%</span></label>
+                <input type="range" id="saturation" min="0" max="100" value="70">
+            </div>
+
+            <div class="control-group">
+                <label>Brightness <span class="value-display" id="bright-val">60%</span></label>
+                <input type="range" id="brightness" min="20" max="100" value="60">
+            </div>
+
+            <div class="control-group">
+                <label>Gravity <span class="value-display" id="grav-val">0.1</span></label>
+                <input type="range" id="gravity" min="-2" max="2" step="0.1" value="0.1">
+            </div>
+
+            <div class="control-group">
+                <label>Charge Force <span class="value-display" id="charge-val">-30</span></label>
+                <input type="range" id="charge" min="-200" max="50" value="-30">
+            </div>
+
+            <div class="control-group">
+                <label>Link Strength <span class="value-display" id="link-val">0.3</span></label>
+                <input type="range" id="linkStrength" min="0" max="2" step="0.1" value="0.3">
+            </div>
+
+            <div class="control-group">
+                <label>Node Size <span class="value-display" id="size-val">5</span></label>
+                <input type="range" id="nodeSize" min="2" max="20" value="5">
+            </div>
+
+            <div class="control-group">
+                <label>Viscosity <span class="value-display" id="visc-val">0.4</span></label>
+                <input type="range" id="viscosity" min="0" max="1" step="0.1" value="0.4">
+            </div>
+        </div>
+
+        <div id="info">
+            <strong>Controls:</strong><br>
+            🖱 Click: Add node | Right-click: Remove<br>
+            🎯 Drag: Move nodes | Wheel: Zoom<br>
+            ⌨️ Space: Pause | Shift: Speed up<br>
+            ↑↓←→: Apply directional force
+        </div>
+    </div>
+
+    <script>
+        // Setup
+        const container = document.getElementById('container');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = window.innerWidth;
+        let height = 300;
+        canvas.width = width;
+        canvas.height = height;
+
+        // Simulation state
+        let nodes = [];
+        let links = [];
+        let paused = false;
+        let speedMultiplier = 1;
+        let mousePos = { x: width / 2, y: height / 2 };
+        let currentPreset = 'galaxy';
+
+        // Parameters (controlled by sliders)
+        let params = {
+            hue: 180,
+            saturation: 70,
+            brightness: 60,
+            gravity: 0.1,
+            charge: -30,
+            linkStrength: 0.3,
+            nodeSize: 5,
+            viscosity: 0.4
+        };
+
+        // Initialize with some nodes
+        function initNodes(count = 50) {
+            nodes = [];
+            links = [];
+
+            for (let i = 0; i < count; i++) {
+                nodes.push({
+                    id: i,
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: 0,
+                    vy: 0,
+                    radius: params.nodeSize,
+                    hue: Math.random() * 360,
+                    group: Math.floor(Math.random() * 5)
+                });
+            }
+
+            // Create some random links
+            for (let i = 0; i < count * 0.4; i++) {
+                const source = Math.floor(Math.random() * nodes.length);
+                let target = Math.floor(Math.random() * nodes.length);
+                while (target === source) target = Math.floor(Math.random() * nodes.length);
+
+                links.push({
+                    source: nodes[source],
+                    target: nodes[target]
+                });
+            }
+        }
+
+        // D3 Force Simulation
+        const simulation = d3.forceSimulation(nodes)
+            .force('charge', d3.forceManyBody().strength(params.charge))
+            .force('link', d3.forceLink(links).distance(50).strength(params.linkStrength))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(d => d.radius + 2))
+            .alphaDecay(0.01)
+            .velocityDecay(params.viscosity);
+
+        // Preset configurations
+        const presets = {
+            rain: () => {
+                params.gravity = 0.5;
+                params.charge = -10;
+                params.linkStrength = 0.8;
+                params.viscosity = 0.2;
+                updateSliders();
+
+                // Make some nodes "floaters" (connected)
+                nodes.forEach((node, i) => {
+                    node.isRain = i % 3 !== 0;
+                    node.radius = node.isRain ? 2 : 6;
+                });
+            },
+            honey: () => {
+                params.gravity = 0.15;
+                params.charge = -5;
+                params.linkStrength = 0.1;
+                params.viscosity = 0.8;
+                params.hue = 40;
+                params.saturation = 80;
+                updateSliders();
+
+                nodes.forEach(node => {
+                    node.viscous = true;
+                    node.radius = params.nodeSize;
+                });
+            },
+            galaxy: () => {
+                params.gravity = 0.0;
+                params.charge = -30;
+                params.linkStrength = 0.3;
+                params.viscosity = 0.4;
+                params.hue = 260;
+                params.saturation = 70;
+                updateSliders();
+
+                nodes.forEach(node => {
+                    node.radius = params.nodeSize;
+                });
+            },
+            chaos: () => {
+                params.gravity = 0.0;
+                params.charge = Math.random() * 100 - 50;
+                params.linkStrength = Math.random();
+                params.viscosity = 0.1;
+                updateSliders();
+
+                // Randomize velocities
+                nodes.forEach(node => {
+                    node.vx = (Math.random() - 0.5) * 10;
+                    node.vy = (Math.random() - 0.5) * 10;
+                    node.radius = params.nodeSize;
+                });
+            }
+        };
+
+        // Update sliders to match params
+        function updateSliders() {
+            document.getElementById('hue').value = params.hue;
+            document.getElementById('saturation').value = params.saturation;
+            document.getElementById('brightness').value = params.brightness;
+            document.getElementById('gravity').value = params.gravity;
+            document.getElementById('charge').value = params.charge;
+            document.getElementById('linkStrength').value = params.linkStrength;
+            document.getElementById('nodeSize').value = params.nodeSize;
+            document.getElementById('viscosity').value = params.viscosity;
+
+            updateValueDisplays();
+        }
+
+        // Update value displays
+        function updateValueDisplays() {
+            document.getElementById('hue-val').textContent = params.hue + '°';
+            document.getElementById('sat-val').textContent = params.saturation + '%';
+            document.getElementById('bright-val').textContent = params.brightness + '%';
+            document.getElementById('grav-val').textContent = params.gravity;
+            document.getElementById('charge-val').textContent = params.charge;
+            document.getElementById('link-val').textContent = params.linkStrength;
+            document.getElementById('size-val').textContent = params.nodeSize;
+            document.getElementById('visc-val').textContent = params.viscosity;
+        }
+
+        // Apply physics based on current preset and params
+        function applyPhysics() {
+            simulation
+                .force('charge', d3.forceManyBody().strength(params.charge))
+                .force('link', d3.forceLink(links).distance(50).strength(params.linkStrength))
+                .velocityDecay(params.viscosity);
+
+            // Gravity effect
+            nodes.forEach(node => {
+                if (currentPreset === 'rain' && node.isRain) {
+                    node.vy += params.gravity * 2;
+                    // Reset to top when out of bounds
+                    if (node.y > height + 20) {
+                        node.y = -20;
+                        node.x = Math.random() * width;
+                    }
+                } else if (currentPreset === 'honey') {
+                    // Attract to mouse
+                    const dx = mousePos.x - node.x;
+                    const dy = mousePos.y - node.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        node.vx += dx * 0.001;
+                        node.vy += dy * 0.001;
+                    }
+                    // Drip effect
+                    node.vy += params.gravity;
+                } else {
+                    node.vy += params.gravity;
+                }
+
+                // Update radius based on slider
+                if (!node.isRain) {
+                    node.radius = params.nodeSize;
+                }
+            });
+
+            simulation.alpha(0.3).restart();
+        }
+
+        // Render function
+        function render() {
+            ctx.fillStyle = 'rgba(13, 17, 23, 0.3)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw links
+            ctx.strokeStyle = `hsla(${params.hue}, ${params.saturation}%, ${params.brightness - 20}%, 0.3)`;
+            ctx.lineWidth = 1;
+            links.forEach(link => {
+                ctx.beginPath();
+                ctx.moveTo(link.source.x, link.source.y);
+                ctx.lineTo(link.target.x, link.target.y);
+                ctx.stroke();
+            });
+
+            // Draw nodes
+            nodes.forEach((node, i) => {
+                const hue = (params.hue + node.group * 30 + i * 2) % 360;
+                const gradient = ctx.createRadialGradient(
+                    node.x, node.y, 0,
+                    node.x, node.y, node.radius
+                );
+                gradient.addColorStop(0, `hsla(${hue}, ${params.saturation}%, ${params.brightness}%, 0.9)`);
+                gradient.addColorStop(1, `hsla(${hue}, ${params.saturation}%, ${params.brightness - 30}%, 0.4)`);
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Glow effect for some nodes
+                if (i % 5 === 0) {
+                    ctx.strokeStyle = `hsla(${hue}, 100%, 70%, 0.5)`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+        }
+
+        // Animation loop
+        function tick() {
+            if (!paused) {
+                applyPhysics();
+                simulation.tick(speedMultiplier);
+            }
+            render();
+            requestAnimationFrame(tick);
+        }
+
+        // Mouse interactions
+        let dragNode = null;
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Find node at position
+            dragNode = nodes.find(node => {
+                const dx = node.x - x;
+                const dy = node.y - y;
+                return Math.sqrt(dx * dx + dy * dy) < node.radius + 5;
+            });
+
+            if (!dragNode && e.button === 0) {
+                // Add new node
+                const newNode = {
+                    id: nodes.length,
+                    x: x,
+                    y: y,
+                    vx: 0,
+                    vy: 0,
+                    radius: params.nodeSize,
+                    hue: Math.random() * 360,
+                    group: Math.floor(Math.random() * 5)
+                };
+                nodes.push(newNode);
+                simulation.nodes(nodes);
+                simulation.alpha(1).restart();
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mousePos.x = e.clientX - rect.left;
+            mousePos.y = e.clientY - rect.top;
+
+            if (dragNode) {
+                dragNode.x = mousePos.x;
+                dragNode.y = mousePos.y;
+                dragNode.vx = 0;
+                dragNode.vy = 0;
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            dragNode = null;
+        });
+
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Remove node at position
+            const index = nodes.findIndex(node => {
+                const dx = node.x - x;
+                const dy = node.y - y;
+                return Math.sqrt(dx * dx + dy * dy) < node.radius + 5;
+            });
+
+            if (index !== -1) {
+                // Remove associated links
+                links = links.filter(link =>
+                    link.source !== nodes[index] && link.target !== nodes[index]
+                );
+                nodes.splice(index, 1);
+                simulation.nodes(nodes);
+                simulation.force('link', d3.forceLink(links).distance(50).strength(params.linkStrength));
+                simulation.alpha(1).restart();
+            }
+        });
+
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            params.nodeSize = Math.max(2, Math.min(20, params.nodeSize * delta));
+            document.getElementById('nodeSize').value = params.nodeSize;
+            updateValueDisplays();
+        });
+
+        // Keyboard interactions
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case ' ':
+                    e.preventDefault();
+                    paused = !paused;
+                    break;
+                case 'Shift':
+                    speedMultiplier = 3;
+                    break;
+                case 'Enter':
+                    simulation.alpha(1).restart();
+                    break;
+                case 'ArrowUp':
+                    nodes.forEach(node => node.vy -= 2);
+                    break;
+                case 'ArrowDown':
+                    nodes.forEach(node => node.vy += 2);
+                    break;
+                case 'ArrowLeft':
+                    nodes.forEach(node => node.vx -= 2);
+                    break;
+                case 'ArrowRight':
+                    nodes.forEach(node => node.vx += 2);
+                    break;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'Shift') {
+                speedMultiplier = 1;
+            }
+        });
+
+        // Control event listeners
+        document.querySelectorAll('.preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentPreset = btn.dataset.preset;
+                presets[currentPreset]();
+                initNodes(currentPreset === 'rain' ? 80 : 50);
+                simulation.nodes(nodes);
+                simulation.force('link', d3.forceLink(links).distance(50).strength(params.linkStrength));
+                simulation.alpha(1).restart();
+            });
+        });
+
+        // Slider controls
+        ['hue', 'saturation', 'brightness', 'gravity', 'charge', 'linkStrength', 'nodeSize', 'viscosity'].forEach(param => {
+            const slider = document.getElementById(param);
+            slider.addEventListener('input', (e) => {
+                params[param] = parseFloat(e.target.value);
+                updateValueDisplays();
+                if (['charge', 'linkStrength', 'viscosity'].includes(param)) {
+                    applyPhysics();
+                }
+            });
+        });
+
+        // Fullscreen toggle
+        document.getElementById('fullscreen-toggle').addEventListener('click', () => {
+            container.classList.toggle('fullscreen');
+            setTimeout(() => {
+                width = window.innerWidth;
+                height = container.classList.contains('fullscreen') ? window.innerHeight : 300;
+                canvas.width = width;
+                canvas.height = height;
+                simulation.force('center', d3.forceCenter(width / 2, height / 2));
+                simulation.alpha(1).restart();
+            }, 50);
+        });
+
+        // Toggle controls visibility
+        document.getElementById('toggle-controls').addEventListener('click', (e) => {
+            const controls = document.getElementById('controls');
+            controls.classList.toggle('hidden');
+            e.target.textContent = controls.classList.contains('hidden') ? 'Show Controls' : 'Hide Controls';
+        });
+
+        // Window resize
+        window.addEventListener('resize', () => {
+            if (!container.classList.contains('fullscreen')) {
+                width = window.innerWidth;
+                canvas.width = width;
+                simulation.force('center', d3.forceCenter(width / 2, height / 2));
+            }
+        });
+
+        // Initialize
+        initNodes();
+        presets.galaxy();
+        document.querySelector('[data-preset="galaxy"]').classList.add('active');
+        updateValueDisplays();
+        tick();
+    </script>
+</body>
+</html>
