@@ -190,6 +190,7 @@
             rain: {
                 rainRate: 3,
                 waterLevel: 0,
+                proximityTracking: new Map(),  // Track how long nodes have been close
                 colors: {
                     rain: ['#5ba3d0', '#6db3e0', '#7fc3f0'],
                     water: ['#4080b0', '#5090c0', '#60a0d0']
@@ -198,7 +199,7 @@
             honey: {
                 flowDirection: { x: 0, y: 1 },  // Default downward
                 flowSpeed: 0.3,
-                collisionDistance: 15,
+                collisionDistance: 70,  // Increased for larger min edge length (5x)
                 colors: {
                     blob: ['#d4a574', '#e0b584', '#ecc594', '#f8d5a4']
                 }
@@ -294,6 +295,7 @@
                     nodes = [];
                     links = [];
                     presetParams.rain.waterLevel = height - 40;
+                    presetParams.rain.proximityTracking.clear(); // Clear proximity tracking
                 },
                 update: () => {
                     frameCount++;
@@ -441,6 +443,59 @@
                             }
                         }
                     });
+
+                    // Track proximity between water nodes and create edges for nodes close together
+                    const proximityThreshold = 25; // Distance threshold
+                    const timeThreshold = 120; // Frames (about 2 seconds at 60fps)
+                    const tracking = presetParams.rain.proximityTracking;
+
+                    waterNodes.forEach((node, i) => {
+                        waterNodes.forEach((other, j) => {
+                            if (i < j) {
+                                const d = dist(node, other);
+                                const pairKey = `${node.id}_${other.id}`;
+
+                                // Check if already connected
+                                const alreadyConnected = links.find(l =>
+                                    (l.source === node && l.target === other) ||
+                                    (l.source === other && l.target === node)
+                                );
+
+                                if (d < proximityThreshold && !alreadyConnected) {
+                                    // Track proximity time
+                                    if (!tracking.has(pairKey)) {
+                                        tracking.set(pairKey, 0);
+                                    }
+                                    tracking.set(pairKey, tracking.get(pairKey) + 1);
+
+                                    // Create edge if close for long enough
+                                    if (tracking.get(pairKey) >= timeThreshold) {
+                                        links.push({
+                                            source: node,
+                                            target: other,
+                                            strength: 0.4,
+                                            distance: 18,
+                                            restLength: 18,
+                                            minLength: 15
+                                        });
+                                        tracking.delete(pairKey); // Remove from tracking
+                                    }
+                                } else if (d >= proximityThreshold) {
+                                    // Reset tracking if nodes move apart
+                                    tracking.delete(pairKey);
+                                }
+                            }
+                        });
+                    });
+
+                    // Clean up old tracking entries for nodes that no longer exist
+                    const waterNodeIds = new Set(waterNodes.map(n => n.id));
+                    for (const pairKey of tracking.keys()) {
+                        const [id1, id2] = pairKey.split('_');
+                        if (!waterNodeIds.has(id1) || !waterNodeIds.has(id2)) {
+                            tracking.delete(pairKey);
+                        }
+                    }
                 },
                 info: 'Rain falls and seeks gaps in the water surface.<br>🖱 Wheel: Control rain rate'
             },
@@ -476,8 +531,8 @@
                             const d = Math.sqrt(dx * dx + dy * dy);
 
                             if (d > 0) {
-                                // Enforce minimum edge length (2 * node radius)
-                                const minLength = link.minLength || 12;
+                                // Enforce minimum edge length (increased 5x)
+                                const minLength = link.minLength || 60;
                                 const targetLength = Math.max(link.restLength, minLength);
                                 const force = (d - targetLength) * link.strength;
 
@@ -509,11 +564,11 @@
                                     );
 
                                     if (!alreadyConnected) {
-                                        const minEdgeLength = 12; // Minimum to prevent overlap
+                                        const minEdgeLength = 60; // Minimum to prevent overlap (5x increase)
                                         links.push({
                                             source: node,
                                             target: other,
-                                            strength: 1.0,
+                                            strength: 0.3,  // Reduced spring strength
                                             distance: collisionDistance,
                                             restLength: Math.max(collisionDistance * 0.8, minEdgeLength),
                                             minLength: minEdgeLength
